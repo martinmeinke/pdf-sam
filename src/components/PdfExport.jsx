@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Box, Typography, CircularProgress } from '@mui/material';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { PDFDocument } from 'pdf-lib';
 
 const PdfExport = ({ allPages, disabled }) => {
@@ -116,22 +117,54 @@ const PdfExport = ({ allPages, disabled }) => {
   };
   
   return (
-    <Box sx={{ mt: 4, mb: 2 }}>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleExport}
-        disabled={disabled || exporting}
-        startIcon={exporting ? <CircularProgress size={20} color="inherit" /> : null}
-        sx={{ minWidth: '150px' }}
-      >
-        {exporting ? 'Exporting...' : 'Export PDF'}
-      </Button>
+    <Box sx={{ 
+      display: 'flex', 
+      flexDirection: 'column',
+      alignItems: 'center',
+      textAlign: 'center' 
+    }}>
+      <Typography variant="h5" gutterBottom color="primary.dark" fontWeight={500}>
+        Export Combined PDF
+      </Typography>
       
-      <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
+      <Box sx={{ my: 3 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleExport}
+          disabled={disabled || exporting}
+          startIcon={exporting ? <CircularProgress size={20} color="inherit" /> : null}
+          endIcon={!exporting && !disabled ? <FileDownloadIcon /> : null}
+          size="large"
+          sx={{ 
+            minWidth: '200px',
+            py: 1.2,
+            px: 3,
+            borderRadius: '50px',
+            fontWeight: 500,
+            boxShadow: '0 4px 10px rgba(33, 150, 243, 0.3)',
+            '&:hover': {
+              boxShadow: '0 6px 15px rgba(33, 150, 243, 0.4)',
+              transform: 'translateY(-2px)'
+            },
+            transition: 'all 0.3s ease'
+          }}
+        >
+          {exporting ? 'Creating PDF...' : 'Export PDF'}
+        </Button>
+      </Box>
+      
+      <Typography 
+        variant="body2" 
+        sx={{ 
+          color: disabled ? 'text.disabled' : 'text.secondary',
+          maxWidth: 500,
+          fontWeight: 400
+        }}
+      >
         {disabled 
-          ? 'Add PDF pages to create an export'
-          : `Export ${allPages.length} page${allPages.length !== 1 ? 's' : ''} as a single PDF`
+          ? 'Add PDF pages above to create a combined document'
+          : `Your document will contain ${allPages.length} page${allPages.length !== 1 ? 's' : ''} in the order shown above`
         }
       </Typography>
     </Box>

@@ -78,16 +78,25 @@ const PdfPage = ({ id, index, page, movePage, removePage }) => {
     border: isOver ? '2px dashed #2196f3' : '1px solid #e0e0e0',
     position: 'relative',
     cursor: 'move',
-    transition: 'all 0.2s ease',
+    transition: 'all 0.3s ease',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
+    borderRadius: '12px',
+    overflow: 'hidden',
+    boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.1)' : '0 4px 8px rgba(0,0,0,0.05)',
+    transform: isDragging ? 'scale(1.02)' : 'scale(1)',
+    '&:hover': {
+      boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
+      transform: 'translateY(-4px)',
+    },
   };
 
   return (
     <Card 
       ref={ref} 
       sx={cardStyle}
+      elevation={isDragging ? 8 : 2}
     >
       <Box sx={{ position: 'relative' }}>
         <CardMedia
@@ -97,7 +106,20 @@ const PdfPage = ({ id, index, page, movePage, removePage }) => {
           sx={{ 
             height: 'auto', 
             objectFit: 'contain',
-            maxHeight: '200px'
+            maxHeight: '200px',
+            bgcolor: '#f8f9fa',
+            borderBottom: '1px solid #f0f0f0'
+          }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0) 20%)',
+            pointerEvents: 'none'
           }}
         />
         <IconButton
@@ -105,11 +127,15 @@ const PdfPage = ({ id, index, page, movePage, removePage }) => {
             position: 'absolute',
             top: 5,
             right: 5,
-            bgcolor: 'rgba(255, 255, 255, 0.7)',
+            bgcolor: 'rgba(255, 255, 255, 0.85)',
+            backdropFilter: 'blur(4px)',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
             '&:hover': {
-              bgcolor: 'rgba(255, 255, 255, 0.9)',
+              bgcolor: 'rgba(255, 255, 255, 0.95)',
+              color: '#f44336',
             },
-            padding: '4px',
+            padding: '8px',
+            transition: 'all 0.2s ease',
           }}
           onClick={() => removePage(index)}
           size="small"
@@ -119,14 +145,39 @@ const PdfPage = ({ id, index, page, movePage, removePage }) => {
           </Tooltip>
         </IconButton>
       </Box>
-      <CardContent sx={{ p: 1, '&:last-child': { pb: 1 }, flexGrow: 1 }}>
+      <CardContent 
+        sx={{ 
+          p: 1.5, 
+          '&:last-child': { pb: 1.5 }, 
+          flexGrow: 1,
+          borderTop: '1px solid rgba(0,0,0,0.03)',
+          bgcolor: 'rgba(247, 250, 252, 0.5)',
+        }}
+      >
         <Box sx={{ 
           fontSize: '0.75rem',
+          fontWeight: 500,
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'text.secondary',
         }}>
-          {page.fileName} - Page {page.pageNumber}
+          <Typography 
+            variant="caption" 
+            component="span" 
+            sx={{ 
+              display: 'inline-block',
+              maxWidth: '100%',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {page.fileName} - Page {page.pageNumber}
+          </Typography>
         </Box>
       </CardContent>
     </Card>

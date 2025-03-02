@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import { Button, Box, Typography, CircularProgress } from '@mui/material';
+import { Button, Box, Typography, CircularProgress, alpha } from '@mui/material';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { pdfjs } from 'react-pdf';
 import { PDFDocument } from 'pdf-lib';
 
@@ -99,29 +100,65 @@ const PdfUploader = ({ setAllPages, setLoading }) => {
   };
 
   return (
-    <Box sx={{ mb: 3, p: 2, border: '1px dashed #ccc', borderRadius: 1 }}>
-      <Typography variant="h6" gutterBottom>
+    <Box sx={{ 
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      textAlign: 'center'
+    }}>
+      <Typography variant="h5" gutterBottom color="primary.dark" fontWeight={500}>
         Select PDF Files
       </Typography>
-      <input
-        ref={fileInputRef}
-        accept="application/pdf"
-        style={{ display: 'none' }}
-        id="pdf-file-input"
-        type="file"
-        multiple
-        onChange={handleFileChange}
-      />
-      <label htmlFor="pdf-file-input">
-        <Button 
-          variant="contained" 
-          component="span"
-        >
-          Select PDFs
-        </Button>
-      </label>
-      <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
-        Select one or multiple PDF files to arrange or combine pages
+      
+      <Box sx={{ 
+        width: '100%',
+        maxWidth: 500,
+        my: 2,
+        p: 3, 
+        border: '2px dashed',
+        borderColor: 'primary.light',
+        borderRadius: 2,
+        bgcolor: 'primary.lighter',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        transition: 'all 0.2s ease',
+        '&:hover': {
+          borderColor: 'primary.main',
+          bgcolor: alpha => alpha('background.paper', 0.9)
+        }
+      }}>
+        <PictureAsPdfIcon color="primary" sx={{ fontSize: 64, mb: 2, opacity: 0.8 }} />
+        
+        <Typography variant="body1" sx={{ mb: 2 }}>
+          Drag & drop PDF files here, or click to select
+        </Typography>
+        
+        <input
+          ref={fileInputRef}
+          accept="application/pdf"
+          style={{ display: 'none' }}
+          id="pdf-file-input"
+          type="file"
+          multiple
+          onChange={handleFileChange}
+        />
+        <label htmlFor="pdf-file-input">
+          <Button 
+            variant="contained" 
+            component="span"
+            color="primary"
+            size="large"
+            sx={{ px: 3, py: 1 }}
+          >
+            Select PDFs
+          </Button>
+        </label>
+      </Box>
+      
+      <Typography variant="body2" sx={{ color: 'text.secondary', maxWidth: 600 }}>
+        Select one or multiple PDF files to arrange or combine pages.
+        All processing happens in your browser, files are never uploaded.
       </Typography>
     </Box>
   );
