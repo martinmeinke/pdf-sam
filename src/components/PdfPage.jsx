@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { Card, CardContent, CardMedia, Box, IconButton, Tooltip } from '@mui/material';
+import { Card, CardContent, CardMedia, Box, IconButton, Tooltip, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const PdfPage = ({ id, index, page, movePage, removePage }) => {
