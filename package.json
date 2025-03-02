@@ -12,7 +12,8 @@
     "@mui/material": "^5.15.7",
     "@mui/icons-material": "^5.15.7",
     "react-dnd": "^16.0.1",
-    "react-dnd-html5-backend": "^16.0.1"
+    "react-dnd-html5-backend": "^16.0.1",
+    "jquery": "^3.7.1"
   },
   "devDependencies": {
     "vite": "^5.0.12",

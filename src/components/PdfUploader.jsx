@@ -18,12 +18,25 @@ const PdfUploader = ({ setAllPages, setLoading }) => {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         
-        // For PDF.js, we'll use a Blob URL which doesn't detach the ArrayBuffer
-        const fileUrl = URL.createObjectURL(file);
+        // Use FileReader to read the file properly
+        const fileArrayBuffer = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsArrayBuffer(file);
+        });
+        
+        // Create a cloned copy of the file to prevent issues
+        const fileBlob = new Blob([new Uint8Array(fileArrayBuffer)], { type: file.type });
+        const fileUrl = URL.createObjectURL(fileBlob);
         
         try {
           // Load the PDF document using pdfjs with the URL for preview
-          const loadingTask = pdfjs.getDocument(fileUrl);
+          const loadingTask = pdfjs.getDocument({
+            url: fileUrl,
+            cMapUrl: 'https://unpkg.com/pdfjs-dist@2.16.105/cmaps/',
+            cMapPacked: true,
+          });
           
           // Check for password protection
           loadingTask.onPassword = (updatePassword, reason) => {
@@ -53,13 +66,19 @@ const PdfUploader = ({ setAllPages, setLoading }) => {
           // Convert canvas to data URL for preview
           const thumbnail = canvas.toDataURL('image/png');
           
+          // To avoid issues with the file object after processing,
+          // create a new blob from the source data
+          const fileClone = new Blob([new Uint8Array(fileArrayBuffer)], { type: file.type });
+          // Convert Blob to File to maintain name property
+          const fileObject = new File([fileClone], file.name, { type: file.type });
+          
           newPages.push({
             id: `${file.name}-${j}`,
             pageNumber: j + 1,
             fileName: file.name,
             thumbnail,
-            // Store the actual file object instead of the ArrayBuffer
-            file: file,
+            // Store the cloned file object 
+            file: fileObject,
             width: viewport.width,
             height: viewport.height,
           });
@@ -118,14 +137,14 @@ const PdfUploader = ({ setAllPages, setLoading }) => {
         border: '2px dashed',
         borderColor: 'primary.light',
         borderRadius: 2,
-        bgcolor: 'primary.lighter',
+        bgcolor: 'rgba(33, 150, 243, 0.05)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         transition: 'all 0.2s ease',
         '&:hover': {
           borderColor: 'primary.main',
-          bgcolor: alpha => alpha('background.paper', 0.9)
+          bgcolor: 'rgba(255, 255, 255, 0.9)'
         }
       }}>
         <PictureAsPdfIcon color="primary" sx={{ fontSize: 64, mb: 2, opacity: 0.8 }} />

@@ -52,8 +52,11 @@ const PdfExport = ({ allPages, disabled }) => {
           // Read the file data
           const fileData = await readFileAsArrayBuffer(file);
           
+          // Create a copy of the data to avoid detached buffer issues
+          const fileDataCopy = new Uint8Array(fileData).buffer;
+          
           // Load the source PDF
-          const sourcePdf = await PDFDocument.load(fileData, {
+          const sourcePdf = await PDFDocument.load(fileDataCopy, {
             // Handle password protection in pdf-lib
             ignoreEncryption: false,
           }).catch(error => {

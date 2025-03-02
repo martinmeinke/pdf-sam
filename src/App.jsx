@@ -9,10 +9,10 @@ import {
   Paper, 
   ThemeProvider, 
   createTheme,
-  alpha,
   AppBar,
   Toolbar
 } from '@mui/material';
+import { alpha } from '@mui/system';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import PdfUploader from './components/PdfUploader';
 import PdfPreview from './components/PdfPreview';
@@ -137,7 +137,7 @@ function App() {
                 borderRadius: 2,
                 border: '1px solid',
                 borderColor: 'divider',
-                bgcolor: alpha(theme.palette.background.paper, 0.7)
+                bgcolor: 'rgba(255, 255, 255, 0.7)'
               }}
             >
               <PdfPreview 
